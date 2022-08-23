@@ -1,7 +1,7 @@
 {
   "name": "react-native-upier",
-  "version": "0.1.0",
-  "description": "UPI handler for react native apps",
+  "version": "0.0.1",
+  "description": "UPI Payments handler for react native apps",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -143,5 +143,6 @@
         }
       ]
     ]
-  }
+  },
+  "dependencies": {}
 }

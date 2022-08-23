@@ -1,4 +1,4 @@
-package com.reactnativeupier;
+package com.rvuyyuru.rnupier;
 
 import androidx.annotation.NonNull;
 

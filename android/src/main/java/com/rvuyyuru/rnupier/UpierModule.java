@@ -1,6 +1,7 @@
 package com.rvuyyuru.rnupier;
 
 import androidx.annotation.NonNull;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,12 +9,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import com.facebook.react.bridge.Promise;
+
+
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.google.gson.Gson;
 
@@ -22,8 +25,19 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+
+
+
+
+
+
+
+
+
+
+
 @ReactModule(name = UpierModule.NAME)
-public class UpierModule extends ReactContextBaseJavaModule {
+public class UpierModule extends ReactContextBaseJavaModule implements ActivityEventListener {
     public static final String NAME = "Upier";
     private static final int REQUEST_CODE = 123;
     private final Gson gson = new Gson();
@@ -46,7 +60,6 @@ public class UpierModule extends ReactContextBaseJavaModule {
     public void intializePayment(ReadableMap config, Callback successHandler, Callback failureHandler) {
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
-
 
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);

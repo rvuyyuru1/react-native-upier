@@ -23,8 +23,8 @@ react-native run link
 Open `android/settings.gradle` add the following
 
 ```
-include ':react-native-upi-payment'
-project(':react-native-upi-payment').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-upi-payment/android')
+include ':react-native-upier'
+project(':react-native-upier').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-upier/android')
 
 ```
 
@@ -32,7 +32,7 @@ Open `android/build.gradle` add the following in the dependencies section
 
 ```
 dependencies {
-    compile project(':react-native-upi-payment')
+    compile project(':react-native-upier')
 }
 ```
 

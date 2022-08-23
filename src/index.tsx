@@ -6,8 +6,8 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';
 
-export const UPIModule = NativeModules?.UpierModule
-  ? NativeModules?.UpierModule
+export const UPIModule = NativeModules?.Upier
+  ? NativeModules?.Upier
   : new Proxy(
       {},
       {

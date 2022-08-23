@@ -7,7 +7,7 @@ const LINKING_ERROR =
   '- You are not using Expo managed workflow\n';
 
 export const UPIModule = NativeModules?.UpierModule
-  ? NativeModules.UPIModule
+  ? NativeModules?.UpierModule
   : new Proxy(
       {},
       {

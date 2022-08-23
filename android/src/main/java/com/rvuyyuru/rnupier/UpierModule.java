@@ -19,18 +19,10 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.google.gson.Gson;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-
-
-
-
-
-
-
 
 
 
@@ -56,11 +48,14 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
         return NAME;
     }
 
+
+
+   
+
      @ReactMethod
     public void intializePayment(ReadableMap config, Callback successHandler, Callback failureHandler) {
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
-
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(config.getString("upiString")));
@@ -77,7 +72,6 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
                 this.failureHandler.invoke(gson.toJson(responseData));
             }
         }

@@ -114,6 +114,9 @@ const RNUPIPayment = {
       ''
     );
   },
+  async getUpiIntentList() {
+    return await UPIModule.getUpiIntentList();
+  },
   /**
    *
    * @param config

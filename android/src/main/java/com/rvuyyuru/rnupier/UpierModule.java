@@ -48,9 +48,41 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
         return NAME;
     }
 
+ @ReactMethod
+    public void getUPIListOfApps(final Promise promise,){
+        try{
+    packageManager = context.getPackageManager();
+    final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+    mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
+    mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+    mainIntent.setAction(Intent.ACTION_VIEW);
+    Uri uriforUpi = new Uri.Builder().scheme("upi").authority("pay").build();
+    mainIntent.setData(uriforUpi);
+    final JSONObject responseData = new JSONObject();
+    final List pkgAppsList = 
+    context.getPackageManager().queryIntentActivities(mainIntent, 0);
+    responseData.put("list", pkgAppsList);
+    responseData.put("status", 'Success');
+    for (int i = 0; i < pkgAppsList.size(); i++) {
+        ResolveInfo resolveInfo = (ResolveInfo) pkgAppsList.get(i);
+        Log.d("TAG", "packageName: " + resolveInfo.activityInfo.packageName);
+        Log.d("TAG", "AppName: " + resolveInfo.loadLabel(packageManager));
+        Log.d("TAG", "AppIcon: " +resolveInfo.loadIcon(packageManager));
+    }
+    promise.resolve( gson.toJson(responseData);    
+    }
+    
+        catch (JSONException e) {
+              e.printStackTrace();
+                    responseData.put("message", "UPI supporting app not installed");
+                     responseData.put("status", FAILURE);
+                     promise.reject(gson.toJson(responseData))
+                  
+                }
+    
+    return;
+    }
 
-
-   
 
      @ReactMethod
     public void intializePayment(ReadableMap config, Callback successHandler, Callback failureHandler) {
@@ -60,21 +92,22 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(config.getString("upiString")));
         Context currentContext = getCurrentActivity().getApplicationContext();
-        if (intent != null) {
-            Intent chooser = Intent.createChooser(intent, "Choose a upi app");
-            if (isCallable(chooser, currentContext)) {
-                getCurrentActivity().startActivityForResult(chooser, REQUEST_CODE);
-            } else {
-                final JSONObject responseData = new JSONObject();
-                try {
-                    responseData.put("message", "UPI supporting app not installed");
-                    responseData.put("status", FAILURE);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                this.failureHandler.invoke(gson.toJson(responseData));
-            }
-        }
+        getCurrentActivity().startActivityForResult(intent, REQUEST_CODE);
+        // if (intent != null) {
+        //     // Intent chooser = Intent.createChooser(intent, "Choose a upi app");
+        //     if (isCallable(chooser, currentContext)) {
+        //         getCurrentActivity().startActivityForResult(chooser, REQUEST_CODE);
+        //     } else {
+        //         final JSONObject responseData = new JSONObject();
+        //         try {
+        //             responseData.put("message", "UPI supporting app not installed");
+        //             responseData.put("status", FAILURE);
+        //         } catch (JSONException e) {
+        //             e.printStackTrace();
+        //         }
+        //         this.failureHandler.invoke(gson.toJson(responseData));
+        //     }
+        // }
     }
 
     private boolean isCallable(Intent intent, Context context) {

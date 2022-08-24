@@ -9,7 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+//import android.util.Log;
 
 
 import com.facebook.react.bridge.Promise;
@@ -50,35 +50,30 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
         return NAME;
     }
 
- @ReactMethod
-    public void getUPIListOfApps(final Promise promise) throws JSONException {
-        try{
-    final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-    mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
-    mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
-    mainIntent.setAction(Intent.ACTION_VIEW);
-    Uri priorUpi = new Uri.Builder().scheme("upi").authority("pay").build();
-    mainIntent.setData(priorUpi);
-          Context currentContext = getCurrentActivity().getApplicationContext();
-    final JSONObject responseData = new JSONObject();
-    final List pkgAppsList =
-      currentContext.getPackageManager().queryIntentActivities(mainIntent,  PackageManager.MATCH_DEFAULT_ONLY);
-    responseData.put("list", pkgAppsList);
-    responseData.put("status", "Success");
-    for (int i = 0; i < pkgAppsList.size(); i++) {
-        ResolveInfo resolveInfo = (ResolveInfo) pkgAppsList.get(i);
-        Log.d("TAG", "packageName: " + resolveInfo.activityInfo.packageName);
-        Log.d("TAG", "AppName: " + resolveInfo.loadLabel( currentContext.getPackageManager()));
-        Log.d("TAG", "AppIcon: " +resolveInfo.loadIcon( currentContext.getPackageManager()));
-    }
-    promise.resolve(gson.toJson(responseData));
-    } catch (JSONException e) {
-          e.printStackTrace();
-          final JSONObject responseData = new JSONObject();
-          responseData.put("status", "Failure");
-          promise.reject(gson.toJson((responseData)));
-        }
-  }
+//  @ReactMethod
+//     public void getUPIListOfApps(final Promise promise)  {
+
+//     final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+//     mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
+//     mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+//     mainIntent.setAction(Intent.ACTION_VIEW);
+//     Uri priorUpi = new Uri.Builder().scheme("upi").authority("pay").build();
+//     mainIntent.setData(priorUpi);
+//           Context currentContext = getCurrentActivity().getApplicationContext();
+//     final JSONObject responseData = new JSONObject();
+//     final List pkgAppsList =
+//       currentContext.getPackageManager().queryIntentActivities(mainIntent,  PackageManager.MATCH_DEFAULT_ONLY);
+//     responseData.put("list", pkgAppsList);
+//     responseData.put("status", "Success");
+//     for (int i = 0; i < pkgAppsList.size(); i++) {
+//         ResolveInfo resolveInfo = (ResolveInfo) pkgAppsList.get(i);
+//         Log.d("TAG", "packageName: " + resolveInfo.activityInfo.packageName);
+//         Log.d("TAG", "AppName: " + resolveInfo.loadLabel( currentContext.getPackageManager()));
+//         Log.d("TAG", "AppIcon: " +resolveInfo.loadIcon( currentContext.getPackageManager()));
+//     }
+//     promise.resolve(gson.toJson(responseData));
+
+//   }
 
 
      @ReactMethod
@@ -88,6 +83,7 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(config.getString("upiString")));
+        intent.setPackage(config.getString("packageName"));
         Context currentContext = getCurrentActivity().getApplicationContext();
         getCurrentActivity().startActivityForResult(intent, REQUEST_CODE);
     }

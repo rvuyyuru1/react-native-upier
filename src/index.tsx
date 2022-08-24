@@ -114,9 +114,9 @@ const RNUPIPayment = {
       ''
     );
   },
-  async getUpiIntentList() {
-    return await UPIModule.getUpiIntentList();
-  },
+  //  getUpiIntentList() {
+  //   return UPIModule.getUpiIntentList();
+  // },
   /**
    *
    * @param config
@@ -139,6 +139,8 @@ const RNUPIPayment = {
    * success handler
    * @param failure
    * failure handler
+   * @param packageName
+   * packagename
    * @param payApp
    * name of app if you know the app name
    */
@@ -147,6 +149,7 @@ const RNUPIPayment = {
     config: ConfigforInit,
     success: any,
     failure: any,
+    packageName?: string,
     payApp?: string
   ): void {
     if (typeof success !== 'function') {
@@ -170,6 +173,7 @@ const RNUPIPayment = {
     let queryString = this.genrateQueryString(config);
     const Config: any = {};
     const app = isNull(payApp) ? '' : payApp + '://';
+    Config.packageName = packageName;
     Config.upiString = app + `upi://pay?${queryString}`;
     UPIModule?.intializePayment(
       Config,

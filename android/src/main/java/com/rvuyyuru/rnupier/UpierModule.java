@@ -85,11 +85,27 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
         intent.setData(Uri.parse(config.getString("upiString")));
         if(config.getString("packageName") != null){
         intent.setPackage(config.getString("packageName"));
-        }
-        Context currentContext = getCurrentActivity().getApplicationContext();
+         Context currentContext = getCurrentActivity().getApplicationContext();
         if(intent.resolveActivity(getPackageManager()) != null){
         getCurrentActivity().startActivityForResult(intent, REQUEST_CODE);
         }
+        }else{
+         Intent chooser = Intent.createChooser(intent, "Choose a upi app");
+            if (isCallable(chooser, currentContext)) {
+                getCurrentActivity().startActivityForResult(chooser, REQUEST_CODE);
+            } else {
+                final JSONObject responseData = new JSONObject();
+                try {
+                    responseData.put("message", "UPI supporting app not installed");
+                    responseData.put("status", FAILURE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                this.failureHandler.invoke(gson.toJson(responseData));
+            }
+        }
+       
     }
 
     private boolean isCallable(Intent intent, Context context) {

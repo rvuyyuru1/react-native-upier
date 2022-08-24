@@ -21,17 +21,29 @@ interface ConfigforInit {
   vpa: string;
   amount: string;
   payeeName: string;
-  currency?: string;
   transactionRef: string;
+  currency?: string;
+  transactionRefUrl?: string;
   transactionNote?: string;
+  merchantCode?: string;
+  gstIn?: string;
+  invoiceDate?: string;
+  invoiceNo?: string;
+  gstBrkUp?: string;
 }
-function isNull(data: any): boolean {
-  if (data === '' || data === 'null' || data === null || data === undefined) {
-    return true;
-  } else {
-    return false;
-  }
-}
+/**
+ *      pa: 'merchant-vpa@xxx',
+        pn: 'Merchant Name',
+        tr: '1234ABCD',  // your custom transaction reference ID
+        url: 'http://url/of/the/order/in/your/website',
+        mc: '1234', // your merchant category code
+        tn: 'Purchase in Merchant',
+        gstBrkUp: 'GST:16.90|CGST:08.45|SGST:08.45', // GST value break up
+        invoiceNo: 'BillRef123', // your invoice number
+        invoiceDate: '2019-06-11T13:21:50+05:30', // your invoice date and time
+        gstIn: '29ABCDE1234F2Z5', // your GSTIN
+ */
+
 const upiConfig: any = {
   vpa: 'pa',
   payeeName: 'pn',
@@ -39,6 +51,12 @@ const upiConfig: any = {
   amount: 'am',
   transactionNote: 'tn',
   currency: 'cu',
+  merchantCode: 'mc',
+  transactionRefUrl: 'url',
+  gstIn: 'gstIn',
+  invoiceDate: 'invoiceDate',
+  invoiceNo: 'invoiceNo',
+  gstBrkUp: 'gstBrkUp',
 };
 const RNUPIPayment = {
   requiredFields: ['vpa', 'amount', 'payeeName', 'transactionRef'],
@@ -131,7 +149,7 @@ const RNUPIPayment = {
    * which can help you identify this transaction
    * The UPI spec doesnt mandate this but its a good to have
    *
-   * transactionNote: Transactional message to be shown in upi apps
+   *
    *
    * @param success
    * success handler
@@ -139,16 +157,14 @@ const RNUPIPayment = {
    * failure handler
    * @param packageName
    * packagename
-   * @param payApp
-   * name of app if you know the app name
+   *
    */
 
   initializePayment(
     config: ConfigforInit,
     success: any,
     failure: any,
-    packageName?: string,
-    payApp?: string
+    packageName?: string
   ): void {
     if (typeof success !== 'function') {
       throw new Error('success callback not a function');
@@ -170,9 +186,8 @@ const RNUPIPayment = {
     config.currency = 'INR';
     let queryString = this.genrateQueryString(config);
     const Config: any = {};
-    const app = isNull(payApp) ? '' : payApp + '://';
     Config.packageName = packageName;
-    Config.upiString = app + `upi://pay?${queryString}`;
+    Config.upiString = `upi://pay?${queryString}`;
     UPIModule?.intializePayment(
       Config,
       this.successCallback(success),

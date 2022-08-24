@@ -9,8 +9,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.module.annotations.ReactModule;
@@ -21,7 +23,6 @@ import com.facebook.react.bridge.ReadableMap;
 import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.List;
 
 
@@ -33,11 +34,12 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
     public static final String NAME = "Upier";
     private static final int REQUEST_CODE = 123;
     private final Gson gson = new Gson();
-    private Callback successHandler;    
+    private Callback successHandler;
     private Callback failureHandler;
     private String FAILURE = "FAILURE";
 
-    public UpierModule(ReactApplicationContext reactContext) {
+
+  public UpierModule(ReactApplicationContext reactContext) {
         super(reactContext);
         reactContext.addActivityEventListener(this);
     }
@@ -49,57 +51,45 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
  @ReactMethod
-    public void getUPIListOfApps(final Promise promise,){
+    public void getUPIListOfApps(final Promise promise) throws JSONException {
         try{
-    packageManager = context.getPackageManager();
     final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
     mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
     mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
     mainIntent.setAction(Intent.ACTION_VIEW);
-    Uri uriforUpi = new Uri.Builder().scheme("upi").authority("pay").build();
-    mainIntent.setData(uriforUpi);
+    Uri priorUpi = new Uri.Builder().scheme("upi").authority("pay").build();
+    mainIntent.setData(priorUpi);
+          Context currentContext = getCurrentActivity().getApplicationContext();
     final JSONObject responseData = new JSONObject();
-    final List pkgAppsList = 
-    context.getPackageManager().queryIntentActivities(mainIntent,  PackageManager.MATCH_DEFAULT_ONLY);
+    final List pkgAppsList =
+      currentContext.getPackageManager().queryIntentActivities(mainIntent,  PackageManager.MATCH_DEFAULT_ONLY);
     responseData.put("list", pkgAppsList);
-    responseData.put("status", 'Success');
+    responseData.put("status", "Success");
     for (int i = 0; i < pkgAppsList.size(); i++) {
         ResolveInfo resolveInfo = (ResolveInfo) pkgAppsList.get(i);
         Log.d("TAG", "packageName: " + resolveInfo.activityInfo.packageName);
-        Log.d("TAG", "AppName: " + resolveInfo.loadLabel(packageManager));
-        Log.d("TAG", "AppIcon: " +resolveInfo.loadIcon(packageManager));
+        Log.d("TAG", "AppName: " + resolveInfo.loadLabel( currentContext.getPackageManager()));
+        Log.d("TAG", "AppIcon: " +resolveInfo.loadIcon( currentContext.getPackageManager()));
     }
-    promise.resolve( gson.toJson(responseData);    
-    }
-    
-        catch (JSONException e) {
-              e.printStackTrace();
-                    responseData.put("message", "UPI supporting app not installed");
-                     responseData.put("status", FAILURE);
-                     promise.reject(gson.toJson(responseData))
-                  
-                }
-    
-    return;
-    }
+    promise.resolve(gson.toJson(responseData));
+    } catch (JSONException e) {
+          e.printStackTrace();
+          final JSONObject responseData = new JSONObject();
+          responseData.put("status", "Failure");
+          promise.reject(gson.toJson((responseData)));
+        }
+  }
 
 
      @ReactMethod
     public void intializePayment(ReadableMap config, Callback successHandler, Callback failureHandler) {
-       
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
-       try{
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(config.getString("upiString")));
         Context currentContext = getCurrentActivity().getApplicationContext();
         getCurrentActivity().startActivityForResult(intent, REQUEST_CODE);
-        }
-        catch (ex: Exception) {
-          Log.e("upi_pay", ex.toString())
-     
-    }
     }
 
     private boolean isCallable(Intent intent, Context context) {
@@ -151,5 +141,5 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
 
     }
 
-  
+
 }

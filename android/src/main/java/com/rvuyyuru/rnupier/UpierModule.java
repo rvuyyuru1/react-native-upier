@@ -60,7 +60,7 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
     mainIntent.setData(uriforUpi);
     final JSONObject responseData = new JSONObject();
     final List pkgAppsList = 
-    context.getPackageManager().queryIntentActivities(mainIntent, 0);
+    context.getPackageManager().queryIntentActivities(mainIntent,  PackageManager.MATCH_DEFAULT_ONLY);
     responseData.put("list", pkgAppsList);
     responseData.put("status", 'Success');
     for (int i = 0; i < pkgAppsList.size(); i++) {
@@ -86,28 +86,20 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
 
      @ReactMethod
     public void intializePayment(ReadableMap config, Callback successHandler, Callback failureHandler) {
+       
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
+       try{
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(config.getString("upiString")));
         Context currentContext = getCurrentActivity().getApplicationContext();
         getCurrentActivity().startActivityForResult(intent, REQUEST_CODE);
-        // if (intent != null) {
-        //     // Intent chooser = Intent.createChooser(intent, "Choose a upi app");
-        //     if (isCallable(chooser, currentContext)) {
-        //         getCurrentActivity().startActivityForResult(chooser, REQUEST_CODE);
-        //     } else {
-        //         final JSONObject responseData = new JSONObject();
-        //         try {
-        //             responseData.put("message", "UPI supporting app not installed");
-        //             responseData.put("status", FAILURE);
-        //         } catch (JSONException e) {
-        //             e.printStackTrace();
-        //         }
-        //         this.failureHandler.invoke(gson.toJson(responseData));
-        //     }
-        // }
+        }
+        catch (ex: Exception) {
+          Log.e("upi_pay", ex.toString())
+     
+    }
     }
 
     private boolean isCallable(Intent intent, Context context) {

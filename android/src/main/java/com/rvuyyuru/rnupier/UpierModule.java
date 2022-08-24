@@ -83,9 +83,13 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(config.getString("upiString")));
+        if(config.getString("packageName") != null){
         intent.setPackage(config.getString("packageName"));
+        }
         Context currentContext = getCurrentActivity().getApplicationContext();
+        if(intent.resolveActivity(getPackageManager()) != null){
         getCurrentActivity().startActivityForResult(intent, REQUEST_CODE);
+        }
     }
 
     private boolean isCallable(Intent intent, Context context) {

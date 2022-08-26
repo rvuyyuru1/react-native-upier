@@ -9,7 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -79,8 +79,7 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
     @Override
     protected void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         final JSONObject responseData = new JSONObject();
-        Log.d("UpierModule:onActivityResult: requestCode: " + requestCode);
-        Log.d("UpierModule:onActivityResult: resultCode: " + resultCode);
+    
         try {
 
             if (data == null) {
@@ -92,16 +91,12 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
                 return;
             }
             if (requestCode == REQUEST_CODE) {
-                Bundle bundle = data.getExtras();
-                Log.d("UpierModule:onActivityResult: response: " + data.getStringExtra("response"));
-                Log.d("UpierModule:onActivityResult: Status: " + data.getStringExtra("Status"));
-                String search = "SUCCESS";
-                Log.v(data);
+                Bundle bundle = data.getExtras();               
+                String search = "SUCCESS";               
                 if (data.getStringExtra("Status").trim().equalsIgnoreCase(search)) {
                     responseData.put("status", data.getStringExtra("Status"));
                     responseData.put("message", bundle.getString("response"));
                     this.successHandler.invoke(gson.toJson(responseData));
-
                 } else {
                     responseData.put("status", data.getStringExtra("Status"));
                     responseData.put("message", bundle.getString("response"));

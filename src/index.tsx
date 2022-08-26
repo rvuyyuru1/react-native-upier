@@ -67,7 +67,11 @@ export const buildURLQuery = (obj: any): string =>
     .map((pair: any) => pair.map(encodeURIComponent).join('='))
     .join('&');
 export const convertURLStringToObject = (responseString: string) => {
-  return Object.fromEntries(new URLSearchParams(responseString));
+  return responseString.split('&').reduce((prev: any, curr: any) => {
+    const p: Array<string> = curr.split('=');
+    prev[decodeURIComponent(p[0])] = decodeURIComponent(p[1]);
+    return prev;
+  }, {});
 };
 const RNUPISDK = {
   /**

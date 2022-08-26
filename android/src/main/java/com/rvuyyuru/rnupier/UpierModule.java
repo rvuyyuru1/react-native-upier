@@ -77,7 +77,7 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
     @Override
-    protected void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         final JSONObject responseData = new JSONObject();
     
         try {

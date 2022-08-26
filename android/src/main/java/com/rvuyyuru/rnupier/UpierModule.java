@@ -9,8 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-//import android.util.Log;
-
+import android.util.Log;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -24,22 +23,18 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.List;
-
-
-
-
+import java.util.Locale;
 
 @ReactModule(name = UpierModule.NAME)
 public class UpierModule extends ReactContextBaseJavaModule implements ActivityEventListener {
     public static final String NAME = "Upier";
-    private static final int REQUEST_CODE = 123;
+    private static final int REQUEST_CODE = 201;
     private final Gson gson = new Gson();
     private Callback successHandler;
     private Callback failureHandler;
     private String FAILURE = "FAILURE";
 
-
-  public UpierModule(ReactApplicationContext reactContext) {
+    public UpierModule(ReactApplicationContext reactContext) {
         super(reactContext);
         reactContext.addActivityEventListener(this);
     }
@@ -50,62 +45,29 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
         return NAME;
     }
 
-//  @ReactMethod
-//     public void getUPIListOfApps(final Promise promise)  {
-
-//     final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-//     mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
-//     mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
-//     mainIntent.setAction(Intent.ACTION_VIEW);
-//     Uri priorUpi = new Uri.Builder().scheme("upi").authority("pay").build();
-//     mainIntent.setData(priorUpi);
-//           Context currentContext = getCurrentActivity().getApplicationContext();
-//     final JSONObject responseData = new JSONObject();
-//     final List pkgAppsList =
-//       currentContext.getPackageManager().queryIntentActivities(mainIntent,  PackageManager.MATCH_DEFAULT_ONLY);
-//     responseData.put("list", pkgAppsList);
-//     responseData.put("status", "Success");
-//     for (int i = 0; i < pkgAppsList.size(); i++) {
-//         ResolveInfo resolveInfo = (ResolveInfo) pkgAppsList.get(i);
-//         Log.d("TAG", "packageName: " + resolveInfo.activityInfo.packageName);
-//         Log.d("TAG", "AppName: " + resolveInfo.loadLabel( currentContext.getPackageManager()));
-//         Log.d("TAG", "AppIcon: " +resolveInfo.loadIcon( currentContext.getPackageManager()));
-//     }
-//     promise.resolve(gson.toJson(responseData));
-
-//   }
-
-
-     @ReactMethod
+    @ReactMethod
     public void intializePayment(ReadableMap config, Callback successHandler, Callback failureHandler) {
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(config.getString("upiString")));
-        if(config.getString("packageName") != null){
         intent.setPackage(config.getString("packageName"));
         Context currentContext = getCurrentActivity().getApplicationContext();
-        if(intent.resolveActivity(currentContext.getPackageManager()) != null){
-        getCurrentActivity().startActivityForResult(intent, REQUEST_CODE);
-        }
-        }else{
-         Context currentContext = getCurrentActivity().getApplicationContext();
-         Intent chooser = Intent.createChooser(intent, "Choose a upi app");
-            if (isCallable(chooser, currentContext)) {
-                getCurrentActivity().startActivityForResult(chooser, REQUEST_CODE);
-            } else {
-                final JSONObject responseData = new JSONObject();
-                try {
-                    responseData.put("message", "UPI supporting app not installed");
-                    responseData.put("status", FAILURE);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                this.failureHandler.invoke(gson.toJson(responseData));
+        Intent chooser = Intent.createChooser(intent, "Choose a upi app");
+        if (isCallable(chooser, currentContext)) {
+            getCurrentActivity().startActivityForResult(chooser, REQUEST_CODE);
+        } else {
+            final JSONObject responseData = new JSONObject();
+            try {
+                responseData.put("message", "UPI supporting app not installed");
+                responseData.put("status", FAILURE);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            this.failureHandler.invoke(gson.toJson(responseData));
         }
-       
+
     }
 
     private boolean isCallable(Intent intent, Context context) {
@@ -115,21 +77,27 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
     @Override
-    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         final JSONObject responseData = new JSONObject();
+        Log.d("UpierModule:onActivityResult: requestCode: " + requestCode);
+        Log.d("UpierModule:onActivityResult: resultCode: " + resultCode);
         try {
+
             if (data == null) {
                 responseData.put("status", FAILURE);
                 responseData.put("message", "No action taken");
-                if(this.failureHandler!=null){
+                if (this.failureHandler != null) {
                     this.failureHandler.invoke(gson.toJson(responseData));
                 }
                 return;
             }
-
             if (requestCode == REQUEST_CODE) {
                 Bundle bundle = data.getExtras();
-                if (data.getStringExtra("Status").trim().equals("SUCCESS")){
+                Log.d("UpierModule:onActivityResult: response: " + data.getStringExtra("response"));
+                Log.d("UpierModule:onActivityResult: Status: " + data.getStringExtra("Status"));
+                String search = "SUCCESS";
+                Log.v(data);
+                if (data.getStringExtra("Status").trim().equalsIgnoreCase(search)) {
                     responseData.put("status", data.getStringExtra("Status"));
                     responseData.put("message", bundle.getString("response"));
                     this.successHandler.invoke(gson.toJson(responseData));
@@ -142,7 +110,7 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
             } else {
                 responseData.put("message", "Request Code Mismatch");
                 responseData.put("status", FAILURE);
-                if(this.failureHandler!=null){
+                if (this.failureHandler != null) {
                     this.failureHandler.invoke(gson.toJson(responseData));
                 }
             }
@@ -156,6 +124,5 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
     public void onNewIntent(Intent intent) {
 
     }
-
 
 }

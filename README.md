@@ -6,6 +6,12 @@ UPI handler for react native apps
 
 ```sh
 npm install react-native-upier
+
+```
+
+```sh
+yarn add react-native-upier
+
 ```
 
 ## Usage
@@ -28,11 +34,11 @@ project(':react-native-upier').projectDir = new File(rootProject.projectDir, '..
 
 ```
 
-Open `android/build.gradle` add the following in the dependencies section
+Open `android/app/build.gradle` add the following in the dependencies section
 
 ```
 dependencies {
-    compile project(':react-native-upier')
+    implementation project(':react-native-upier')
 }
 ```
 
@@ -55,58 +61,27 @@ import com.rvuyyuru.rnupier.UpierPackage;
 ## Usage
 
 ```javascript
-RNUPIPayment.initializePayment(
+import RNUPISDK from 'react-native-upier';
+
+RNUPISDK.initializePayment(
   {
-    vpa: 'john@upi', // or can be john@ybl or mobileNo@upi
-    payeeName: 'John Doe',
-    amount: '1',
-    transactionRef: 'aasf-332-aoei-fn',
+    pa: 'xxxx@upi', // or can be xxx@ybl or mobileNo@upi
+    pn: 'xxxx xxx',
+    am: '1',
+    tf: 'xxxx-xxx-xxx-xxrefid',
   },
+  successCallback,
+  failureCallback
+);
+// or
+RNUPISDK.initializePayment(
+  'upi://pay?pa=xxx@upi&am=1&pn=xxxx&tf=xxxx-xxx-xxx-xxrefid', // UPI encodedURI string
   successCallback,
   failureCallback
 );
 ```
 
 ## Config docs
-
-```javascript
-{
-  /*
-  * REQUIRED
-  * vpa is the address of the payee given to you
-  * by your bank
-  */
-  vpa: 'somehandle@upi',
-
-  /*
-  * REQUIRED
-  * payeeName is the name of the payee you want
-  * to make a payment too. Some upi apps need this
-  * hence it is a required field
-  */
-  payeeName: 'Payee name',
-
-  /*
-  * REQUIRED
-  * This is a reference created by you / your server
-  * which can help you identify this transaction
-  * The UPI spec doesnt mandate this but its a good to have
-  */
-  transactionRef: 'some-hash-string',
-
-  /*
-  * REQUIRED
-  * The actual amount to be transferred
-  */
-  amount: '200',
-
-  /*
-  * OPTIONAL
-  * Transactional message to be shown in upi apps
-  */
-  transactionNote: 'for food'
-}
-```
 
 ## Callbacks
 
@@ -142,7 +117,7 @@ responseCode: "00",
 /**
 * Transaction reference stated in init obect
 * */
-txnRef: "aasf-332-aoeifn"
+txnRef: "xxxx-xxx-xxx-xxrefid"
 
 }
 ```
@@ -182,7 +157,7 @@ FAILURE CASES
   /**
   * Transaction reference stated in init obect
   * */
-  txnRef: "aasf-332-aoeifn"
+  txnRef: "xxxx-xxx-xxx-xxrefid"
 
   }
 ```

@@ -74,6 +74,11 @@ export const convertURLStringToObject = (responseString: string) => {
   }, {});
 };
 const RNUPISDK = {
+  // list upi apps
+  listUpiSupportedApps(){
+    return UPIModule.listUpiSupportedApps()
+  }
+
   /**
    *
    * @param config object || string

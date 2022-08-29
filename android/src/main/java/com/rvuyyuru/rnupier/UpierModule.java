@@ -45,6 +45,20 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
         return NAME;
     }
 
+
+@ReactMethod
+public void listUpiSupportedApps(){
+    Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+      Context currentContext = getCurrentActivity().getApplicationContext();
+    mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
+    mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+    mainIntent.setAction(Intent.ACTION_VIEW);
+    Uri uri1 = new Uri.Builder().scheme("upi").authority("pay").build();
+    mainIntent.setData(uri1);  
+     List<ResolveInfo> pkgAppsList = currentContext.getPackageManager().queryIntentActivities( mainIntent,  PackageManager.MATCH_DEFAULT_ONLY);
+return pkgAppsList;
+
+}
     @ReactMethod
     public void intializePayment(ReadableMap config, Callback successHandler, Callback failureHandler) {
         this.successHandler = successHandler;

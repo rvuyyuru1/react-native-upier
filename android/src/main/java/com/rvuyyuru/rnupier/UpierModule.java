@@ -49,7 +49,7 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
 @ReactMethod
 public void listUpiSupportedApps(){
     Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-      Context currentContext = getCurrentActivity().getApplicationContext();
+    Context currentContext = getCurrentActivity().getApplicationContext();
     mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
     mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
     mainIntent.setAction(Intent.ACTION_VIEW);

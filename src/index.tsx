@@ -75,9 +75,9 @@ export const convertURLStringToObject = (responseString: string) => {
 };
 const RNUPISDK = {
   // list upi apps
-  listUpiSupportedApps(): any {
-    return UPIModule.listUpiSupportedApps();
-  },
+  // listUpiSupportedApps(): any {
+  //   return UPIModule.listUpiSupportedApps();
+  // },
 
   /**
    *

@@ -11,8 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 
 
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.Promise;
+// import com.facebook.react.bridge.Arguments;
+// import com.facebook.react.bridge.Promise;
+// import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.module.annotations.ReactModule;
@@ -47,31 +48,29 @@ public class UpierModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
 
-@ReactMethod
-public void listUpiSupportedApps(final Promise promise)  throws JSONException{
-     try {
-    Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-    Context currentContext = getCurrentActivity().getApplicationContext();
-    mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
-    mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
-    mainIntent.setAction(Intent.ACTION_VIEW);
-    Uri uri1 = new Uri.Builder().scheme("upi").authority("pay").build();
-    mainIntent.setData(uri1);  
-    List<ResolveInfo> pkgAppsList = currentContext.getPackageManager().queryIntentActivities( mainIntent,  PackageManager.MATCH_DEFAULT_ONLY);    
-    WritableArray rowsArrayResult = Arguments.createArray();
-    for(item in pkgAppsList){
-     Map<String, String> map = new HashMap<String, String>();
-     map.put('appName',item.appName);
-     map.put('packagename',item.packageName)
-     rowsArrayResult.push(map)    
-    }
-    
-    promise.resolve(rowsArrayResult);
-     }catch(Exception e) {
-        promise.reject("Something went wrong!", e);
-    }
-
-}
+// @ReactMethod
+// public void listUpiSupportedApps(final Promise promise)  throws JSONException{
+//      try {
+//     Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+//     Context currentContext = getCurrentActivity().getApplicationContext();
+//     mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
+//     mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+//     mainIntent.setAction(Intent.ACTION_VIEW);
+//     Uri uri1 = new Uri.Builder().scheme("upi").authority("pay").build();
+//     mainIntent.setData(uri1);  
+//     List<ResolveInfo> pkgAppsList = currentContext.getPackageManager().queryIntentActivities( mainIntent,  PackageManager.MATCH_DEFAULT_ONLY);    
+//     WritableArray rowsArrayResult = Arguments.createArray();
+//     for(item in pkgAppsList){
+//     final JSONObject responseData = new JSONObject();
+//      responseData.put('appName',item.appName);
+//      responseData.put('packagename',item.packageName)
+//      rowsArrayResult.push(responseData)    
+//     }    
+//     promise.resolve(rowsArrayResult);
+//      }catch(Exception e) {
+//         promise.reject("Something went wrong!", e);
+//     }
+// }
     @ReactMethod
     public void intializePayment(ReadableMap config, Callback successHandler, Callback failureHandler) {
         this.successHandler = successHandler;

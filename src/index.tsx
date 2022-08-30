@@ -18,7 +18,7 @@ export const UPIModule = NativeModules?.Upier
 const UPI_APP_NOT_INSTALLED = 'UPI supporting app not installed';
 const REQUEST_CODE_MISMATCH = 'Request Code Mismatch';
 const NO_ACTION_TAKEN = 'No action taken';
-const requiredFields = ['pa', 'am', 'pn', 'tf'];
+const requiredFields = ['pa', 'am', 'pn', 'cu'];
 
 const validateObject = (config: any) => {
   const errorArray: any = [];

@@ -1,6 +1,6 @@
 {
   "name": "react-native-upier",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "UPI Payments handler for react native apps",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -9,12 +9,8 @@
   "source": "src/index",
   "keywords": [
     "react-native",
-    "react",
-    "native",
-    "upi",
-    "payments",
-    "peer to peer",
-    "scan and pay"
+    "ios",
+    "android"
   ],
   "files": [
     "src",
@@ -40,11 +36,6 @@
     "pods": "cd example && pod-install --quiet",
     "bootstrap": "yarn example && yarn && yarn pods"
   },
-  "keywords": [
-    "react-native",
-    "ios",
-    "android"
-  ],
   "repository": "https://github.com/rvuyyuru1/react-native-upier",
   "author": "Raja shekar Reddy <vuyyururajashekarreddy2222@gmail.com> (https://github.com/rvuyyuru1)",
   "license": "MIT",

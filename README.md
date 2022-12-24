@@ -1,6 +1,7 @@
 # react-native-upier
 
 UPI handler for react native apps
+react-native-upier is a tiny plugin to integrate the UPI payment interface made by NPCI from your react native apps. This plugin allows you to enable peer to peer payments via UPI in your react native apps. Linking specs have been followed as per this doc
 
 ## Installation
 

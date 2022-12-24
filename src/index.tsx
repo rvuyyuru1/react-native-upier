@@ -32,7 +32,7 @@ const validateObject = (config: any) => {
 const successCallback = (success: any) => {
   return (data: any) => {
     data = JSON.parse(data);
-    console.log('UPISDK_Success', data);
+
     const successString = data.nameValuePairs && data.nameValuePairs.message;
     let successObj: any = convertURLStringToObject(successString);
     successObj.status = data.status;
@@ -43,7 +43,6 @@ const successCallback = (success: any) => {
 const failureCallback = (failure: any) => {
   return (data: any) => {
     data = JSON.parse(data);
-    console.log('UPISDK_Failure', data);
     let failureObj = {};
     if (typeof data.nameValuePairs.message === 'undefined') {
       failure(data.nameValuePairs);
@@ -107,12 +106,19 @@ const RNUPISDK = {
     failure: any,
     packageName?: string
   ): void {
-    if (typeof success !== 'function') {
-      throw new Error('success callback not a function');
+    if (success) {
+      if (typeof success !== 'function') {
+        throw new Error('success callback not a function');
+      }
+    } else {
+      throw new Error('success callback required!');
     }
-
-    if (typeof failure !== 'function') {
-      throw new Error('failure callback not a function');
+    if (failure) {
+      if (typeof failure !== 'function') {
+        throw new Error('failure callback not a function');
+      }
+    } else {
+      throw new Error('failure callback required!');
     }
     const Config: any = {};
     Config.packageName = packageName;

@@ -7,6 +7,15 @@
   "types": "lib/typescript/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
+  "keywords": [
+    "react-native",
+    "react",
+    "native",
+    "upi",
+    "payments",
+    "peer to peer",
+    "scan and pay"
+  ],
   "files": [
     "src",
     "lib",
